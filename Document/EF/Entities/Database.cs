@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Document.EF.Entities;
+﻿namespace Document.EF.Entities;
 
 public partial class Database
 {
