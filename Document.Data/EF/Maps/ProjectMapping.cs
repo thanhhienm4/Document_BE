@@ -1,8 +1,8 @@
-﻿using Document.EF.Entities;
+﻿using Document.Data.EF.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Document.EF.Maps
+namespace Document.Data.EF.Maps
 {
     public class ProjectMapping : IEntityTypeConfiguration<Project>
     {

@@ -1,4 +1,4 @@
-﻿namespace Document.EF.Entities;
+﻿namespace Document.Data.EF.Entities;
 
 public partial class Table
 {

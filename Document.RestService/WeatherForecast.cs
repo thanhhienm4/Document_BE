@@ -1,4 +1,4 @@
-namespace Document
+namespace Document.RestService
 {
     public class WeatherForecast
     {

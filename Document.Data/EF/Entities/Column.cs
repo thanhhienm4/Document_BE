@@ -1,4 +1,4 @@
-﻿namespace Document.EF.Entities;
+﻿namespace Document.Data.EF.Entities;
 
 public partial class Column
 {
@@ -10,7 +10,7 @@ public partial class Column
 
     public string? DataType { get; set; }
 
-    public int? Lenght { get; set; }
+    public int? Length { get; set; }
 
     public bool? IsNull { get; set; }
 

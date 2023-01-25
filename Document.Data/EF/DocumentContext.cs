@@ -1,18 +1,21 @@
-﻿using Document.EF.Entities;
-using Document.EF.Maps;
+﻿using Document.Data.EF.Entities;
+using Document.Data.EF.Maps;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-namespace Document.EF;
+namespace Document.Data.EF;
 
 // ReSharper disable once PartialTypeWithSinglePart
-public partial class DocumentContext : DbContext
+public partial class DocumentContext : IdentityDbContext<IdentityUser>
 {
     private readonly IConfiguration _configuration;
 
-    public DocumentContext(DbContextOptions<DocumentContext> options)
+    public DocumentContext(DbContextOptions<DocumentContext> options, IConfiguration configuration)
         : base(options)
     {
-        _configuration = new ConfigurationBuilder().Build();
+        _configuration = configuration;
     }
 
     public virtual DbSet<Column> Columns { get; set; } = null!;
@@ -30,11 +33,14 @@ public partial class DocumentContext : DbContext
     public virtual DbSet<TableTranslation> TableTranslations { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Document"));
+    {
+        var temp = _configuration.GetSection("ConnectionStrings");
+        Console.WriteLine(temp.Value);
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DocumentDb"));
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         modelBuilder.ApplyConfiguration(new ColumnMapping());
         modelBuilder.ApplyConfiguration(new ColumnTranslationMapping());
         modelBuilder.ApplyConfiguration(new DatabaseMapping());
@@ -43,9 +49,10 @@ public partial class DocumentContext : DbContext
         modelBuilder.ApplyConfiguration(new TableMapping());
         modelBuilder.ApplyConfiguration(new TableTranslationMapping());
 
-        OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
 
     // ReSharper disable once PartialMethodWithSinglePart
+    // ReSharper disable once UnusedMember.Local
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
