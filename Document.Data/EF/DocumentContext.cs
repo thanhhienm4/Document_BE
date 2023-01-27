@@ -11,11 +11,13 @@ namespace Document.Data.EF;
 public partial class DocumentContext : IdentityDbContext<IdentityUser>
 {
     private readonly IConfiguration _configuration;
+    private readonly DbContextOptions<DocumentContext> _dbContextOptions;
 
     public DocumentContext(DbContextOptions<DocumentContext> options, IConfiguration configuration)
         : base(options)
     {
         _configuration = configuration;
+        _dbContextOptions = options;
     }
 
     public virtual DbSet<Column> Columns { get; set; } = null!;
@@ -34,9 +36,8 @@ public partial class DocumentContext : IdentityDbContext<IdentityUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var temp = _configuration.GetSection("ConnectionStrings");
-        Console.WriteLine(temp.Value);
-        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DocumentDb"));
+        if(_dbContextOptions == null && _configuration != null)
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DocumentDb"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
